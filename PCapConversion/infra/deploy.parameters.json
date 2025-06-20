@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environmentName": {
+      "value": "pcap-analytics-dev"
+    },
+    "location": {
+      "value": "East US"
+    },
+    "resourceGroupName": {
+      "value": "rg-pcap-analytics-dev"
+    },
+    "logAnalyticsWorkspaceId": {
+      "value": "21217efb-8500-4acf-b807-f80496bb022f"
+    },
+    "logAnalyticsSharedKey": {
+      "value": "hCDl9BDEnZYSWzVdq4jzaG205sYZWfm27hYEnudD5WIcxYdGbrrqM5OIQFXr5Pbtd0xBgL/+l1rdugzAVoZVbA=="
+    }
+  }
+}

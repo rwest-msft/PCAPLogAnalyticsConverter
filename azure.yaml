@@ -1,0 +1,22 @@
+# azure.yaml for AZD deployment
+# This file defines the services and their dependencies for azd up
+
+name: pcapconversion-app
+metadata:
+  template: containerapp
+services:
+  pcapconversion:
+    project: ./PCapConversion
+    language: py
+    host: containerapp
+    docker:
+      path: ./PCapConversion
+      context: .
+    env:
+      AZURE_SQL_CONNECTION_STRING: "{{AZURE_SQL_CONNECTION_STRING}}"
+dependencies:
+  - azure-sql-db
+  - keyvault
+  - containerregistry
+  - applicationinsights
+  - loganalytics

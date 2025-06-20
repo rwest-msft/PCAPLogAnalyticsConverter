@@ -1,0 +1,10 @@
+{
+  "resourceGroupPrefix": "rg-",
+  "storageStorageAccounts": "st",
+  "operationalInsightsWorkspaces": "log",
+  "insightsComponents": "appi",
+  "webServerFarms": "plan",
+  "webSitesFunctions": "func",
+  "keyVaultVaults": "kv",
+  "managedIdentityUserAssignedIdentities": "id"
+}
