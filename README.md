@@ -130,3 +130,53 @@ PCAPData_CL
 - Increase function timeout for large files
 - Consider using Premium hosting plan for better performance
 - Monitor memory usage and adjust accordingly
+
+## Secure Handling of Log Analytics Shared Key
+
+This solution follows Azure best practices for secret management by never storing sensitive values in code or configuration files. Instead, the Log Analytics shared key is securely injected and referenced using Azure Key Vault and Bicep:
+
+### 1. Key Provided as Deployment Parameter
+
+- During deployment, the Log Analytics shared key is provided as a secure parameter (see `deploy.parameters.json` or your deployment pipeline).
+- Example:
+  ```json
+  "logAnalyticsSharedKey": {
+    "value": "<your-log-analytics-shared-key>"
+  }
+  ```
+
+### 2. Key Vault Secret Creation via Bicep
+
+- The Bicep template provisions an Azure Key Vault.
+- The shared key is written into Key Vault as a secret named `log-analytics-shared-key`:
+  ```bicep
+  resource logAnalyticsKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+    name: 'log-analytics-shared-key'
+    parent: keyVault
+    properties: {
+      value: logAnalyticsSharedKey
+      contentType: 'text/plain'
+    }
+  }
+  ```
+
+### 3. Function App References Secret via Key Vault Reference
+
+- The Function App is configured with an app setting:
+  ```
+  LOG_ANALYTICS_SHARED_KEY = @Microsoft.KeyVault(VaultName=<key-vault-name>;SecretName=log-analytics-shared-key)
+  ```
+- This is set in the Bicep template, so the Function App reads the key securely at runtime.
+
+### 4. Managed Identity Access
+
+- The Function App’s managed identity is granted the `Key Vault Secrets User` role, allowing it to read secrets from Key Vault without storing credentials.
+
+### 5. Best Practices
+
+- **Never commit secrets**: No keys or secrets are present in code or configuration files under version control.
+- **Use Key Vault for all secrets**: Store all sensitive values in Key Vault and reference them via app settings.
+- **Parameterize deployments**: Always provide secrets as secure parameters during deployment, not in source files.
+- **Review access**: Ensure only necessary identities have access to Key Vault secrets.
+
+---
