@@ -64,12 +64,18 @@ Create a blob container named `pcap-files` in your storage account.
 # Deploy function code
 func azure functionapp publish your-function-app-name --python
 
-# Set application settings
+# Set application settings (including Key Vault reference for the shared key)
 az functionapp config appsettings set \
   --name your-function-app-name \
   --resource-group your-resource-group \
-  --settings LOG_ANALYTICS_WORKSPACE_ID=your-workspace-id
+  --settings \
+    LOG_ANALYTICS_WORKSPACE_ID=your-workspace-id \
+    LOG_ANALYTICS_SHARED_KEY=@Microsoft.KeyVault(VaultName=<your-key-vault-name>;SecretName=log-analytics-shared-key)
 ```
+
+> **Note:**
+> - Replace `<your-key-vault-name>` with the name of the Key Vault created by the Bicep deployment. You can find this in the deployment outputs or in the Azure Portal.
+> - The Function App's managed identity must have access to read secrets from this Key Vault (the Bicep template configures this automatically).
 
 ### Option 2: VS Code Azure Functions Extension
 1. Install Azure Functions extension
